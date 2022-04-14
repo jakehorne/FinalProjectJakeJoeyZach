@@ -74,12 +74,12 @@ def main():
         add_to_db(data, cur, conn)
         a += 25
         b += 25
-    c,d = 0,25
+    y,z = 0,25
     while c<=350:
-        tups = get_nba_team(c,d,cur,conn)
+        tups = get_nba_team(y,z,cur,conn)
         add_team(tups, cur, conn)
-        c += 25
-        d += 25
+        y += 25
+        z += 25
 
 if __name__ == "__main__":
     main()
