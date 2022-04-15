@@ -63,8 +63,13 @@ def add_team(tups, cur, conn):
         cur.execute("INSERT OR IGNORE INTO nba_ids(player_id,team) VALUES(?,?)", (id,team))
     conn.commit()
 
+def get(cur,conn):
+    cur.execute("SELECT * FROM NBAData ORDER BY points DESC LIMIT 5")
+    return cur.fetchall()
+
 def main():
     cur, conn = set_up_db('FPData.db')
+    print(get(cur,conn))
     # while a<=350:
     #     data = player_data(a,b)
     #     add_to_db(data, cur, conn)
