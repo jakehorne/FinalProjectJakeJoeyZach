@@ -31,15 +31,30 @@ def add_players(data,cur,conn):
     for tup in data:
         cur.execute("INSERT OR IGNORE INTO nhl_ids(player_id,name,abbreviation,team) VALUES(?,?,?,?)", (tup[0],tup[1],tup[2],tup[3]))
 
+# def get_stats(ids, cur, conn):
+#     for id in ids:
+#         print(id)
+#         url = "https://statsapi.web.nhl.com/api/v1/people/ID/stats"
+#         r_url = url.format(id)
+#         r = requests.get(url)
+#         data = r.text
+#         #print(data)
+#         dict = json.loads(data)
+#         print(dict)
+#     return
+
 def main():
     cur,conn = set_up_db('FPData.db')
     players = player_data()
     list_ids = [tup[0] for tup in players]
-    print(len(list_ids))
-    a,b = 0,25
-    while b <= 850:
-        data = players[a:b]
-        add_players(data,cur,conn)
+    # a,b = 0,25
+    # while b <= 850:
+    #     data = players[a:b]
+    #     add_players(data,cur,conn)
+    # c,d = 0,25
+    # while d <= 850:
+    #     ids = list_ids[c:d]
+    #     print(get_stats(ids,cur,conn))
     
 
 
