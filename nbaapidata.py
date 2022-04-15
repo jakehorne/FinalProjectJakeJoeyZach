@@ -65,21 +65,17 @@ def add_team(tups, cur, conn):
 
 def main():
     cur, conn = set_up_db('FPData.db')
-    data = get_nba_team(300,400,cur,conn)
-    print(data)
-    add_team(data,cur,conn)
-    a,b = 0,25
-    while a<=350:
-        data = player_data(a,b)
-        add_to_db(data, cur, conn)
-        a += 25
-        b += 25
-    y,z = 0,25
-    while c<=350:
-        tups = get_nba_team(y,z,cur,conn)
-        add_team(tups, cur, conn)
-        y += 25
-        z += 25
+    # while a<=350:
+    #     data = player_data(a,b)
+    #     add_to_db(data, cur, conn)
+    #     a += 25
+    #     b += 25
+    # y,z = 0,25
+    # while y<=350:
+    #     tups = get_nba_team(y,z,cur,conn)
+    #     add_team(tups, cur, conn)
+    #     y += 25
+    #     z += 25
 
 if __name__ == "__main__":
     main()
