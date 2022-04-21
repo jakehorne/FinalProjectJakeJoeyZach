@@ -31,7 +31,6 @@ def clean_data(data):
 def add_data(data, cur, conn):
     cur.execute("CREATE TABLE IF NOT EXISTS nhl_data('rank' INTEGER PRIMARY KEY, 'name' TEXT, 'points' INTEGER)")
     conn.commit()
-    print(data)
     for tup in data:
         print(tup)
         cur.execute("INSERT OR IGNORE INTO nhl_data(rank,name,points) VALUES(?,?,?)", (tup[0], tup[1], tup[2]))
@@ -44,7 +43,7 @@ def main():
     data4 = get_nhl('http://www.nhl.com/ice/m_statslist.htm?season=20212022&view=points&pg=4')
     data5 = get_nhl('http://www.nhl.com/ice/m_statslist.htm?season=20212022&view=points&pg=5')
     clean1 = clean_data(data1)
-    add_data(clean1,cur,conn)
+    
 
 if __name__ == "__main__":
     main()
