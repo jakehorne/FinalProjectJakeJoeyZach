@@ -67,7 +67,7 @@ def nba_graph(cur,conn):
     ax.bar(teams,players)
     ax.set_xlabel('Team')
     ax.set_ylabel('# of Players in Top 100 PPG')
-    ax.set_title('Teams With Players in Top 100 PPG')
+    ax.set_title('Teams With Players in Top 100 PPG in the NBA')
     fig.set_figheight(5)
     fig.set_figwidth(15)
     plt.tight_layout()
@@ -76,10 +76,36 @@ def nba_graph(cur,conn):
     pass
 
 def nhl_graph(cur,conn):
-    cur.execute('''SELECT abbreviation
-                FROM nhl_ids JOIN nhl_data
-                ON nhl_data.name.split()[1] in nhl_ids''')
-    print(cur.fetchall())
+    cur.execute("SELECT name from nhl_data")
+    players = cur.fetchall()
+    players_list = []
+    for tup in players:
+        players_list.append(tup[0])
+    cur.execute("SELECT name, abbreviation from nhl_ids")
+    data = cur.fetchall()
+    team_dict = {}
+    for player in players_list:
+        for tup in data:
+            team = tup[1]
+            print(tup)
+            if player in tup[0]:
+                team_dict[team] = team_dict.get(team, 0) + 1
+    sorted_data = sorted(team_dict.items(), key  = lambda x: x[1])
+    teams = []
+    players = []
+    for tup in sorted_data:
+        teams.append(tup[0])
+        players.append(tup[1])
+    fig, ax = plt.subplots()
+    ax.bar(teams,players)
+    ax.set_xlabel('Team')
+    ax.set_ylabel('# of Players in Top 100 Points')
+    ax.set_title('Teams With Players in Top 100 Points for NHL')
+    fig.set_figheight(5)
+    fig.set_figwidth(15)
+    plt.tight_layout()
+    fig.savefig("NHLTeams.png")
+    plt.show()
 
 def main():
     cur,conn = set_up_db('FPData.db')
