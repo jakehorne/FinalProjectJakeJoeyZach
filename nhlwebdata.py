@@ -40,12 +40,11 @@ def main():
     data3 = get_nhl('http://www.nhl.com/ice/m_statslist.htm?season=20212022&view=points&pg=3')
     data4 = get_nhl('http://www.nhl.com/ice/m_statslist.htm?season=20212022&view=points&pg=4')
     data5 = get_nhl('http://www.nhl.com/ice/m_statslist.htm?season=20212022&view=points&pg=5')
-    # clean_data(data1,cur,conn)
-    # clean_data(data2,cur,conn)
-    print(data3)
+    clean_data(data1,cur,conn)
+    clean_data(data2,cur,conn)
     clean_data(data3,cur,conn)
-    # clean_data(data4,cur,conn)
-    # clean_data(data5,cur,conn)
+    clean_data(data4,cur,conn)
+    clean_data(data5,cur,conn)
 
     
 
