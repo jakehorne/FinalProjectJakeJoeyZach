@@ -28,6 +28,14 @@ def clean_data(data):
         new_data.append((rank, name, points))
     return new_data
 
+def add_data(data, cur, conn):
+    cur.execute("CREATE TABLE IF NOT EXISTS nhl_data('rank' INTEGER PRIMARY KEY, 'name' TEXT, 'points' INTEGER)")
+    conn.commit()
+    print(data)
+    for tup in data:
+        print(tup)
+        cur.execute("INSERT OR IGNORE INTO nhl_data(rank,name,points) VALUES(?,?,?)", (tup[0], tup[1], tup[2]))
+
 def main():
     cur, conn = set_up_db("FPData.db")
     data1 = get_nhl('http://www.nhl.com/ice/m_statslist.htm?view=points')
@@ -35,7 +43,8 @@ def main():
     data3 = get_nhl('http://www.nhl.com/ice/m_statslist.htm?season=20212022&view=points&pg=3')
     data4 = get_nhl('http://www.nhl.com/ice/m_statslist.htm?season=20212022&view=points&pg=4')
     data5 = get_nhl('http://www.nhl.com/ice/m_statslist.htm?season=20212022&view=points&pg=5')
-    print(clean_data(data1))
+    clean1 = clean_data(data1)
+    add_data(clean1,cur,conn)
 
 if __name__ == "__main__":
     main()
