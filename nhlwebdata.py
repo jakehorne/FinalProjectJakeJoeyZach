@@ -26,7 +26,7 @@ def clean_data(data,cur,conn):
     for lst in data[1:]:
         rank = int(lst[0])
         points = int(lst[4])
-        name = lst[1] + lst[2]
+        name = lst[2]
         cur.execute("INSERT OR IGNORE INTO nhl_data(rank,name,points) VALUES(?,?,?)", (rank, name, points))
         conn.commit()
         new_data.append((rank, name, points))
