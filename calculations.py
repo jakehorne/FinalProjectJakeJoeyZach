@@ -51,13 +51,43 @@ def nba_comp(top5, cur, conn):
     pass
 
 def nba_graph(cur,conn):
+    cur.execute("SELECT team FROM NBAWebData")
+    dict_teams = {}
+    data = cur.fetchall()
+    for tup in data:
+        team = tup[0]
+        dict_teams[team] = dict_teams.get(team, 0) + 1
+    sorted_data = sorted(dict_teams.items(), key  = lambda x: x[1])
+    teams = []
+    players = []
+    for tup in sorted_data:
+        teams.append(tup[0])
+        players.append(tup[1])
+    fig, ax = plt.subplots()
+    ax.bar(teams,players)
+    ax.set_xlabel('Team')
+    ax.set_ylabel('# of Players in Top 100 PPG')
+    ax.set_title('Teams With Players in Top 100 PPG')
+    fig.set_figheight(5)
+    fig.set_figwidth(15)
+    plt.tight_layout()
+    fig.savefig("NBATeams.png")
+    plt.show()
     pass
+
+def nhl_graph(cur,conn):
+    cur.execute('''SELECT abbreviation
+                FROM nhl_ids JOIN nhl_data
+                ON nhl_data.name.split()[1] in nhl_ids''')
+    print(cur.fetchall())
 
 def main():
     cur,conn = set_up_db('FPData.db')
     top5 = get_nba_players(cur,conn)
     nba_comp(top5, cur, conn)
-    
+    nba_graph(cur,conn)
+    nhl_graph(cur,conn)
+
 
 
 if __name__ == "__main__":
