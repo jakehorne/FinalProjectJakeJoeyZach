@@ -19,21 +19,25 @@ def get_nhl(link):
         list_data.append(stat.text.split())
     return list_data
 
-def clean_data(data):
+def clean_data(data,cur,conn):
+    cur.execute("CREATE TABLE IF NOT EXISTS nhl_data('rank' INTEGER PRIMARY KEY, 'name' TEXT, 'points' INTEGER)")
+    conn.commit()
     new_data = []
     for lst in data[1:]:
         rank = int(lst[0])
         points = int(lst[4])
         name = lst[1] + ' ' + lst[2]
+        print((rank,name,points))
+        cur.execute("INSERT OR IGNORE INTO nhl_data(rank,name,points) VALUES(?,?,?)", (rank, name, points))
         new_data.append((rank, name, points))
     return new_data
 
-def add_data(data, cur, conn):
-    cur.execute("CREATE TABLE IF NOT EXISTS nhl_data('rank' INTEGER PRIMARY KEY, 'name' TEXT, 'points' INTEGER)")
-    conn.commit()
-    for tup in data:
-        print(tup)
-        cur.execute("INSERT OR IGNORE INTO nhl_data(rank,name,points) VALUES(?,?,?)", (tup[0], tup[1], tup[2]))
+# def add_data(data, cur, conn):
+#     cur.execute("CREATE TABLE IF NOT EXISTS nhl_data('rank' INTEGER PRIMARY KEY, 'name' TEXT, 'points' INTEGER)")
+#     conn.commit()
+#     for tup in data:
+#         print(tup)
+#         cur.execute("INSERT OR IGNORE INTO nhl_data(rank,name,points) VALUES(?,?,?)", (tup[0], tup[1], tup[2]))
 
 def main():
     cur, conn = set_up_db("FPData.db")
@@ -42,7 +46,9 @@ def main():
     data3 = get_nhl('http://www.nhl.com/ice/m_statslist.htm?season=20212022&view=points&pg=3')
     data4 = get_nhl('http://www.nhl.com/ice/m_statslist.htm?season=20212022&view=points&pg=4')
     data5 = get_nhl('http://www.nhl.com/ice/m_statslist.htm?season=20212022&view=points&pg=5')
-    clean1 = clean_data(data1)
+    #clean_data(data1,cur,conn)
+    clean_data(data2,cur,conn)
+
     
 
 if __name__ == "__main__":
