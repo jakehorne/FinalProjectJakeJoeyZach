@@ -108,12 +108,24 @@ def nhl_graph(cur,conn):
     plt.show()
     return sorted_data
 
-def write_data(data):
+def write_data(data1, data2, data3):
     base_path = os.path.abspath(os.path.dirname(__file__))
-    full_path = os.path.join(base_path, "final_project_data.csv")
+    full_path = os.path.join(base_path, "NBAPlayers.csv")
     with open(full_path, "w", newline='') as f:
         writer = csv.writer(f, delimiter = ',')
-        for tup in data:
+        for tup in data1:
+            writer.writerow(tup)
+    base_path = os.path.abspath(os.path.dirname(__file__))
+    full_path = os.path.join(base_path, "NBAPTeams.csv")
+    with open(full_path, "w", newline='') as f:
+        writer = csv.writer(f, delimiter = ',')
+        for tup in data2:
+            writer.writerow(tup)
+    base_path = os.path.abspath(os.path.dirname(__file__))
+    full_path = os.path.join(base_path, "NHLTeams.csv")
+    with open(full_path, "w", newline='') as f:
+        writer = csv.writer(f, delimiter = ',')
+        for tup in data3:
             writer.writerow(tup)
 
 def main():
@@ -122,8 +134,7 @@ def main():
     nba_data = nba_comp(top5, cur, conn)
     nba_data2 = nba_graph(cur,conn)
     nhl_data = nhl_graph(cur,conn)
-    write_data(nba_data)
-    #write_data(nba_data2)
+    write_data(nba_data, nba_data2, nhl_data)
 
 
 
