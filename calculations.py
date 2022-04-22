@@ -2,6 +2,7 @@ import sqlite3
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+import csv
 
 def set_up_db(db_name):
     path = os.path.dirname(os.path.abspath(__file__))
@@ -48,7 +49,7 @@ def nba_comp(top5, cur, conn):
     plt.tight_layout()
     fig.savefig("NBAPlayerVteam.png")
     plt.show()
-    pass
+    return list(zip(list_list,list_pts))
 
 def nba_graph(cur,conn):
     cur.execute("SELECT team FROM NBAWebData")
@@ -73,7 +74,7 @@ def nba_graph(cur,conn):
     plt.tight_layout()
     fig.savefig("NBATeams.png")
     plt.show()
-    pass
+    return list(zip(teams,players))
 
 def nhl_graph(cur,conn):
     cur.execute("SELECT name from nhl_data")
@@ -87,7 +88,6 @@ def nhl_graph(cur,conn):
     for player in players_list:
         for tup in data:
             team = tup[1]
-            print(tup)
             if player in tup[0]:
                 team_dict[team] = team_dict.get(team, 0) + 1
     sorted_data = sorted(team_dict.items(), key  = lambda x: x[1])
@@ -106,13 +106,24 @@ def nhl_graph(cur,conn):
     plt.tight_layout()
     fig.savefig("NHLTeams.png")
     plt.show()
+    return sorted_data
+
+def write_data(data):
+    base_path = os.path.abspath(os.path.dirname(__file__))
+    full_path = os.path.join(base_path, "final_project_data.csv")
+    with open(full_path, "w", newline='') as f:
+        writer = csv.writer(f, delimiter = ',')
+        for tup in data:
+            writer.writerow(tup)
 
 def main():
     cur,conn = set_up_db('FPData.db')
     top5 = get_nba_players(cur,conn)
-    nba_comp(top5, cur, conn)
-    nba_graph(cur,conn)
-    nhl_graph(cur,conn)
+    nba_data = nba_comp(top5, cur, conn)
+    nba_data2 = nba_graph(cur,conn)
+    nhl_data = nhl_graph(cur,conn)
+    write_data(nba_data)
+    #write_data(nba_data2)
 
 
 
