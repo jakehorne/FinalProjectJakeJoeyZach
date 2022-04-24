@@ -4,6 +4,10 @@ import sqlite3
 import os
 
 def player_data():
+    '''
+    This function has no input or output.
+    It references an api and 
+    '''
     url = "https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster"
     r = requests.get(url)
     data = r.text
@@ -34,11 +38,12 @@ def add_players(data,cur,conn):
 def main():
     cur,conn = set_up_db('FPData.db')
     players = player_data()
-    list_ids = [tup[0] for tup in players]
-    # a,b = 0,25
-    # while b <= 850:
-    #     data = players[a:b]
-    #     add_players(data,cur,conn)
+    print(players)
+    #list_ids = [tup[0] for tup in players]
+    a,b = 0,25
+    while b <= 850:
+        data = players[a:b]
+        add_players(data,cur,conn)
 
     
 
