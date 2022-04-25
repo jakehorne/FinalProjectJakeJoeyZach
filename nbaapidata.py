@@ -4,6 +4,11 @@ import sqlite3
 import os
 
 def player_data(a,b):
+    '''
+    This function takes in two variables representing integers: a and b. 
+    The balldontlie api is then referenced and returns a list of tuples. 
+    These tuples include a player id along with average points, rebounds, and assists.
+    '''
     list_data = []
     url = "https://www.balldontlie.io/api/v1/season_averages?player_ids[]={}"
     for i in range(a,b):
@@ -19,12 +24,20 @@ def player_data(a,b):
     return list_data
 
 def set_up_db(db_name):
+    '''
+    This function takes in a database name and sets up a database under that name. 
+    It returns the cur and conn which can be used to access and change the database.
+    '''
     path = os.path.dirname(os.path.abspath(__file__))
     conn = sqlite3.connect(path+'/'+db_name)
     cur = conn.cursor()
     return cur, conn
 
 def add_to_db(data, cur, conn):
+    '''
+    This function takes in the data returned by player_data. 
+    It then adds this data to the database under the NBAData table.
+    '''
     cur.execute("CREATE TABLE IF NOT EXISTS NBAData ('player_id' INTEGER PRIMARY KEY, 'points' INTEGER, 'rebounds' INTEGER, 'assists' INTEGER)")
     conn.commit()
     for i in data:
@@ -36,6 +49,12 @@ def add_to_db(data, cur, conn):
     conn.commit()
 
 def get_nba_team(a, b, cur, conn):
+    '''
+    This function takes in two numbers, a and b, along with cur and conn. 
+    The function then takes each player_id from the NBAData table. 
+    Using the player_id and the balldontlie api, the function returns 
+    a list of tuples containing the player_id and their team's three letter abbreviation.
+    '''
     cur.execute("SELECT player_id FROM NBAData")
     list_id = []
     for item in cur.fetchall():
@@ -55,6 +74,10 @@ def get_nba_team(a, b, cur, conn):
     return list_tup
 
 def add_team(tups, cur, conn):
+    '''
+    This function takes in cur, conn, and the data returned by get_nba_team. 
+    The data is then inserted into the nba_ids table and nothing is return.
+    '''
     cur.execute("CREATE TABLE IF NOT EXISTS nba_ids('player_id' INTEGER PRIMARY KEY, 'team' TEXT)") 
     conn.commit()
     for tup in tups:
@@ -63,24 +86,19 @@ def add_team(tups, cur, conn):
         cur.execute("INSERT OR IGNORE INTO nba_ids(player_id,team) VALUES(?,?)", (id,team))
     conn.commit()
 
-def get(cur,conn):
-    cur.execute("SELECT * FROM NBAData ORDER BY points DESC LIMIT 5")
-    return cur.fetchall()
-
 def main():
     cur, conn = set_up_db('FPData.db')
-    print(get(cur,conn))
-    # while a<=350:
-    #     data = player_data(a,b)
-    #     add_to_db(data, cur, conn)
-    #     a += 25
-    #     b += 25
-    # y,z = 0,25
-    # while y<=350:
-    #     tups = get_nba_team(y,z,cur,conn)
-    #     add_team(tups, cur, conn)
-    #     y += 25
-    #     z += 25
+    while a<=350:
+        data = player_data(a,b)
+        add_to_db(data, cur, conn)
+        a += 25
+        b += 25
+    y,z = 0,25
+    while y<=350:
+        tups = get_nba_team(y,z,cur,conn)
+        add_team(tups, cur, conn)
+        y += 25
+        z += 25
 
 if __name__ == "__main__":
     main()
