@@ -6,7 +6,8 @@ import os
 def player_data():
     '''
     This function has no input or output.
-    It references an api and 
+    It references an api and returns a list of tuples. 
+    These tuples include a player id, name, team abbreviation, and team.
     '''
     url = "https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster"
     r = requests.get(url)
@@ -24,12 +25,20 @@ def player_data():
     return list_players
 
 def set_up_db(db_name):
+    '''
+    This function takes in a database name and sets up a database under that name. 
+    It returns the cur and conn which can be used to access and change the database.
+    '''
     path = os.path.dirname(os.path.abspath(__file__))
     conn = sqlite3.connect(path+'/'+db_name)
     cur = conn.cursor()
     return cur, conn
 
 def add_players(data,cur,conn):
+    '''
+    This function takes in cur, conn and the data returned by player_data. 
+    It then adds each tuple to the nhl_ids table.
+    '''
     cur.execute("CREATE TABLE IF NOT EXISTS nhl_ids('player_id' INTEGER PRIMARY KEY,'name' TEXT, 'abbreviation' TEXT, 'team' TEXT)") 
     conn.commit()
     for tup in data:
