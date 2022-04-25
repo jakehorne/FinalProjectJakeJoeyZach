@@ -5,6 +5,11 @@ import os
 
 
 def ppg_2021():
+    '''
+    This function uses beatiful soup to get data from the cbs sports website. 
+    It then creates a tuple of an nba players name team and points per game and returns that tuple.
+    
+    '''
     result = requests.get('https://www.cbssports.com/nba/stats/player/scoring/nba/regular/all-pos/qualifiers/?sortdir=descending&sortcol=ppg')
     #print(result.status_code)
     src = result.content
@@ -51,12 +56,21 @@ def ppg_2021():
     return tuple(stats)
 
 def set_up_db(db_name):
+    '''
+    This function takes in a database name and sets up a database under that name. 
+    It returns the cur and conn which can be used to access and change the database.
+    '''
+
     path = os.path.dirname(os.path.abspath(__file__))
     conn = sqlite3.connect(path+'/'+db_name)
     cur = conn.cursor()
     return cur, conn
 
 def add_to_db(data, cur, conn):
+    '''
+    This function takes in the list of tuples data, cur, and conn.
+    From itereating through the list of tuples it adds the players rank, name, team, and ppg to the data base.
+    '''
     cur.execute("CREATE TABLE IF NOT EXISTS NBAWebData ('rank' INTEGER PRIMARY KEY, 'name' STRING, 'team' STRING, 'ppg' INTEGER)")
     conn.commit()
     for i in data:
